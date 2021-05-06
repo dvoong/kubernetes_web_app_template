@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-app-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: kubernetes-app-postgres
+  template:
+    metadata:
+      labels:
+        run: kubernetes-app-postgres
+    spec:
+      containers:
+        - name: kubernetes-app-postgres
+          image: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: POSTGRES_PASSWORD

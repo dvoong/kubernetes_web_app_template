@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-app-flask
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: kubernetes-app-flask
+  template:
+    metadata:
+      labels:
+        run: kubernetes-app-flask
+    spec:
+      containers:
+        - name: kubernetes-app-flask
+          image: dvoong/flask_app:latest
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: POSTGRES_PASSWORD
+            - name: SQLALCHEMY_DATABASE_URI
+              value: postgresql://postgres:$(POSTGRES_PASSWORD)@$(KUBERNETES_APP_POSTGRES_SERVICE_HOST)/postgres
